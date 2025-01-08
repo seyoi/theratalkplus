@@ -34,7 +34,7 @@ export function ChatbotCard({ chatbot, token }: ChatbotCardProps) {
   
     try {
       const response = await axios.post(
-        `http://localhost:8000/chatbots/${chatbot.chatbotId}/train`,
+        `https://theratalkplus.com/chatbots/${chatbot.chatbotId}/train`,
         formData,
         {
           headers: {
@@ -65,7 +65,7 @@ export function ChatbotCard({ chatbot, token }: ChatbotCardProps) {
   
     try {
       const response = await axios.get(
-        `http://localhost:8000/chatbots/${chatbot.chatbotId}/training-data`,
+        `http://theratalkplus.com/chatbots/${chatbot.chatbotId}/training-data`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -107,7 +107,7 @@ export function ChatbotCard({ chatbot, token }: ChatbotCardProps) {
     }
 
     try {
-      const response = await axios.delete(`http://localhost:8000/chatbots/${chatbot.chatbotId}/training-data/${filename}`, {
+      const response = await axios.delete(`https://theratalkplus.com/chatbots/${chatbot.chatbotId}/training-data/${filename}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
 
@@ -126,7 +126,7 @@ export function ChatbotCard({ chatbot, token }: ChatbotCardProps) {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/chatbot/${chatbot.chatbotId}/test/message`,
+        `https://theratalkplus.com/chatbot/${chatbot.chatbotId}/test/message`,
         { message: testMessage }
       )
 

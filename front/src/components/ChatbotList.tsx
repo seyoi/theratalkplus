@@ -43,7 +43,7 @@ export default function ChatbotList() {
     }
 
     try {
-      const response = await axios.get("http://localhost:8000/chatbots", {
+      const response = await axios.get("https://theratalkplus.com/chatbots", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

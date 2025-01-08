@@ -3,7 +3,7 @@ import { db } from "@/app/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { FaSearch } from "react-icons/fa";
 import CustomerModal from "./CustomerModal";
-
+import MessageInput from "./ChatScreen";
 
 interface Chat {
   message: string;
@@ -433,7 +433,7 @@ const Chats = () => {
 
 
                   {/* 메시지 입력창 */}
-          
+           
             </div>
           </div>
         )}

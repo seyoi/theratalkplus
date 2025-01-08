@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { db } from "@/app/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import { FaSearch } from "react-icons/fa";
-import CustomerModal from "./CustomerModal";
-
 
 interface Chat {
   message: string;
@@ -23,9 +21,7 @@ interface UserConversation {
   chart_number: string | null;
   chatbotId: string;
   showEdit?: boolean;
-  note : string | null;
 }
-
 
 const Chats = () => {
   const [userConversations, setUserConversations] = useState<UserConversation[]>([]);
@@ -41,50 +37,6 @@ const Chats = () => {
   const scrollRef = useRef<HTMLDivElement | null>(null); // 대화창 끝 부분에 대한 ref
   const messageRefs = useRef<Map<number, HTMLDivElement>>(new Map()); // 각 메시지에 대한 ref 저장
 
-    // New state for modal visibility and customer info
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCustomerInfo, setSelectedCustomerInfo] = useState<{
-      clientName: string;
-      clientPhone: string;
-      chartNumber: string;
-      isConfirmed: boolean;
-      isCancelled: boolean;
-      userId:string;
-      note:string;
-      
-    } | null>(null);
-
-
-
-     // Handling "확정" card click to show modal
-  const handleConfirmCardClick = (user: UserConversation) => {
-    setExpandedConversation(user);
-    setSearchQuery(""); 
-    setShowDropdown(false); 
-    setScrollToSearchMessage(false); 
-
-    if (user.is_confirmed) {
-      setSelectedCustomerInfo({
-        clientName: user.client_name || "없음",
-        clientPhone: user.client_phone || "없음",
-        chartNumber: user.chart_number || "없음",
-        isConfirmed: user.is_confirmed,
-        isCancelled: user.is_cancelled,
-        userId:user.userId,
-        note:user.note || "없음"
-      });
-      setIsModalOpen(true);
-    }
-  };
-
-  // Close modal handler
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedCustomerInfo(null); // Reset the customer info when modal is closed
-  };
-
-
-  
   // 검색어에 따른 필터링
   useEffect(() => {
     if (!searchQuery) {
@@ -136,7 +88,6 @@ const Chats = () => {
             client_phone: data.client_phone || null,
             chart_number: data.chart_number || null,
             chatbotId: data.chatbotId || "",
-            note: data.note || null
           };
         }
       });
@@ -214,20 +165,10 @@ const Chats = () => {
     }
   }, [expandedConversation]);
 
-
-
-
-
-
-
-
-
-
   return (
     <>
-    <div className="flex"></div>
       {/* 서치바 */}
-      <div className="p-0 w-[500px] flex items-center space-x-4 mb-4">
+      <div className="p-6 w-full flex items-center space-x-4 mb-4">
         <FaSearch className="text-gray-500" />
         <input
           type="text"
@@ -284,42 +225,13 @@ const Chats = () => {
         </div>
       )}
 
- {/* 확정 카드 가로 스크롤 영역 */}
- {filteredCards.length > 0 && (
-        <div className="overflow-x-auto mt-4">
-          <div className="flex space-x-4">
-            {filteredCards
-              .filter((user) => user.is_confirmed)
-              .map((user) => (
-                <div
-                  key={user.userId}
-                  className="min-w-[180px] p-3 rounded-md shadow-md cursor-pointer bg-green-100"
-                  onClick={() => handleConfirmCardClick(user)}
-                >
-                  <h3 className="text-sm font-semibold truncate">{user.client_name || "없음"}</h3>
-                  <p className="text-xs text-gray-600">{user.client_phone || "없음"}</p>
-                  <p className="text-xs text-gray-600">{user.chart_number || "없음"}</p>
-                  <div className="mt-2 text-xs text-green-500">확정됨</div>
-                </div>
-              ))}
-          </div>
-        </div>
-      )}
 
-      {/* Modal for showing customer info */}
-      {selectedCustomerInfo && (
-        <CustomerModal
-          isOpen={isModalOpen}
-          onClose={handleCloseModal}
-          customerInfo={selectedCustomerInfo}
-        />
-      )}
 
          {/* 확정/취소 카드 가로 스크롤 영역 */}
-      {/* {filteredCards.length > 0 && (
+      {filteredCards.length > 0 && (
         <div className="overflow-x-auto mt-4">
           <div className="flex space-x-4">
-         
+            {/* 확정 카드 */}
             {filteredCards
               .filter((user) => user.is_confirmed)
               .map((user) => (
@@ -335,7 +247,7 @@ const Chats = () => {
                 </div>
               ))}
 
-         
+            {/* 취소 카드 */}
             {filteredCards
               .filter((user) => user.is_cancelled)
               .map((user) => (
@@ -352,55 +264,54 @@ const Chats = () => {
               ))}
           </div>
         </div>
-      )} */}
+      )}
 
 
 
-      <div className="flex relative ">
+      <div className="flex relative">
         {/* 왼쪽 대화 목록 */}
-        <div className="p-0 pr-2 w-1/3 space-y-4 overflow-y-auto max-h-[700px]">
-  {userConversations.map((user) => {
-    const lastMessage = user.conversations[user.conversations.length - 1];
-    return (
-      <div
-        key={user.userId}
-        className="w-full p-4 rounded-md shadow-md cursor-pointer border border-gray-300"
-        onClick={() => handleCardClick(user)}
-      >
-        <h2 className="text-lg font-semibold">{`고객 이름: ${user.client_name || "없음"}`}</h2>
-        <p>{`연락처: ${user.client_phone || "없음"}`}</p>
-        <p>{`차트 번호: ${user.chart_number || "없음"}`}</p>
+        <div className="p-6 w-1/3 space-y-4">
+          {userConversations.map((user) => {
+            const lastMessage = user.conversations[user.conversations.length - 1];
+            return (
+              <div
+                key={user.userId}
+                className="w-full p-4 rounded-md shadow-md cursor-pointer"
+                onClick={() => handleCardClick(user)}
+              >
+                <h2 className="text-lg font-semibold">{`고객 이름: ${user.client_name || "없음"}`}</h2>
+                <p>{`연락처: ${user.client_phone || "없음"}`}</p>
+                <p>{`차트 번호: ${user.chart_number || "없음"}`}</p>
 
-        {lastMessage && (
-          <p className="text-sm mt-2 text-gray-600">{lastMessage.message}</p>
-        )}
+                {lastMessage && (
+                  <p className="text-sm mt-2 text-gray-600">{lastMessage.message}</p>
+                )}
 
-        <div
-          className={`mt-2 text-sm ${
-            user.is_confirmed ? "text-green-500" :
-            user.is_cancelled ? "text-red-500" : "text-yellow-500"
-          }`}
-        >
-          {user.is_confirmed ? "확정됨" :
-          user.is_cancelled ? "취소됨" : "미확정"}
+                <div
+                  className={`mt-2 text-sm ${
+                    user.is_confirmed ? "text-green-500" :
+                    user.is_cancelled ? "text-red-500" : "text-yellow-500"
+                  }`}
+                >
+                  {user.is_confirmed ? "확정됨" :
+                  user.is_cancelled ? "취소됨" : "미확정"}
+                </div>
+
+                {lastMessage?.timestamp && (
+                  <p className="text-xs mt-1 text-gray-500">
+                    {new Date(lastMessage.timestamp.seconds * 1000).toLocaleString()}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
-
-        {lastMessage?.timestamp && (
-          <p className="text-xs mt-1 text-gray-500">
-            {new Date(lastMessage.timestamp.seconds * 1000).toLocaleString()}
-          </p>
-        )}
-      </div>
-    );
-  })}
-</div>
-
 
 
         {/* 슬라이드 대화창 */}
         {expandedConversation && (
-          <div className="transition-all transform ease-in-out duration-300 w-2/3 p-6 bg-white shadow-lg rounded-md overflow-y-auto absolute right-0 top-0 bottom-auto z-5 max-h-[700px] border border-gray-300">
-            <div className="space-y-4 mt-6 h-full">
+          <div className="transition-all transform ease-in-out duration-300 w-2/3 p-6 bg-white shadow-lg rounded-md overflow-y-auto absolute right-0 top-0 bottom-0 z-5">
+            <div className="space-y-4 mt-6">
               {expandedConversation.conversations.map((notif, index) => {
                 const isAI = notif.senderType === "AI";
                 return (
@@ -430,10 +341,6 @@ const Chats = () => {
                 );
               })}
               <div ref={scrollRef}></div>
-
-
-                  {/* 메시지 입력창 */}
-          
             </div>
           </div>
         )}
