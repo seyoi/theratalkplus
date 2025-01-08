@@ -1,8 +1,9 @@
-'use client'
+"use client";
+
 import React, { useEffect, useState } from "react";
 
 const App: React.FC = () => {
-  const [permission, setPermission] = useState<string>(Notification.permission);
+  const [permission, setPermission] = useState<string>("default");
 
   // 알림 권한 요청
   const requestNotificationPermission = async () => {
@@ -28,11 +29,14 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    // 페이지가 로드될 때 알림 권한 상태를 확인
-    if (Notification.permission === "default") {
-      requestNotificationPermission();
-    } else {
-      setPermission(Notification.permission);
+    // 클라이언트 사이드에서만 Notification API 사용
+    if (typeof window !== "undefined" && Notification) {
+      // 페이지가 로드될 때 알림 권한 상태를 확인
+      if (Notification.permission === "default") {
+        requestNotificationPermission();
+      } else {
+        setPermission(Notification.permission);
+      }
     }
   }, []);
 
