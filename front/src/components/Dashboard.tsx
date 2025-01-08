@@ -1,16 +1,14 @@
-'use client';
-import DatePicker from 'react-datepicker';
-import "react-datepicker/dist/react-datepicker.css";
-import { addDays, format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Copy, Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { db } from '@/app/firebase'; // Firestore 설정 경로를 맞게 설정하세요.
 import { onSnapshot, doc } from 'firebase/firestore';
+import Calendar from './Calendar'; // 캘린더 컴포넌트 임포트
+import { format } from 'date-fns';
 
 type AppointmentMode = 'available' | 'unavailable';
 type TimeSlot = string;
@@ -108,12 +106,9 @@ export default function AdminDashboard() {
           <CardTitle>당일 예약 관리 ({format(selectedDate, 'yyyy-MM-dd')})</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <DatePicker
-            selected={selectedDate}
-            onChange={(date) => setSelectedDate(date!)}
-            dateFormat="yyyy-MM-dd"
-            inline
-          />
+          {/* 자체 캘린더 사용 */}
+          <Calendar selectedDate={selectedDate} onDateSelect={setSelectedDate} />
+
           <RadioGroup
             defaultValue="available"
             onValueChange={(value: string) => setMode(value as AppointmentMode)}
@@ -155,58 +150,43 @@ export default function AdminDashboard() {
         </CardContent>
       </Card>
 
-      {/* <Card>
+      <Card>
         <CardHeader>
           <CardTitle>현재 예약 시간</CardTitle>
         </CardHeader>
         <CardContent>
-          <ul>
-            {existingSlots.length > 0 ? (
-              existingSlots.map((time) => <li key={time}>{time}</li>)
-            ) : (
-              <li>예약된 시간이 없습니다.</li>
-            )}
-          </ul>
+          {existingSlots.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {existingSlots.map((time) => (
+                <span
+                  key={time}
+                  className="bg-white-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium border border-gray-500"
+                >
+                  {time}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center text-center text-gray-500 space-y-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7h4m-2 4h2m1 5h-3m1-9h4m1 6h-3"
+                />
+              </svg>
+              <p className="text-gray-500">예약된 시간이 없습니다.</p>
+            </div>
+          )}
         </CardContent>
-      </Card> */}
-      <Card>
-  <CardHeader>
-    <CardTitle>현재 예약 시간</CardTitle>
-  </CardHeader>
-  <CardContent>
-    {existingSlots.length > 0 ? (
-      <div className="flex flex-wrap gap-2">
-        {existingSlots.map((time) => (
-          <span
-            key={time}
-            className="bg-white-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium border border-gray-500"
-          >
-            {time}
-          </span>
-        ))}
-      </div>
-    ) : (
-      <div className="flex flex-col items-center justify-center text-center text-gray-500 space-y-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-8 w-8 text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M8 7h4m-2 4h2m1 5h-3m1-9h4m1 6h-3"
-          />
-        </svg>
-        <p className="text-gray-500">예약된 시간이 없습니다.</p>
-      </div>
-    )}
-  </CardContent>
-</Card>
-
+      </Card>
     </div>
   );
 }

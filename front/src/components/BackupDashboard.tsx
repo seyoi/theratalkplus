@@ -78,7 +78,7 @@ export default function AdminDashboard() {
     try {
       console.log("Sending data to API:", { date: formattedDate, booking_data: bookingData });
 
-      const response = await fetch(`http://localhost:8000/set-booking-data-by-date`, {
+      const response = await fetch(`https://theratalkplus.com/set-booking-data-by-date`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
