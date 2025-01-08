@@ -3,7 +3,7 @@ import { ArrowRightIcon } from "@radix-ui/react-icons";
 
 import { Separator } from "@/components/ui/separator";
 
-export function Announcement() {
+export default function Announcement() {
   return (
     <Link
       href="/docs/changelog"
