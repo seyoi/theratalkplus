@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Checkbox } from '@/components/ui/checkbox';
+import Checkbox  from '@/components/ui/checkbox';
 import { Save } from 'lucide-react';
 import { db } from '@/app/firebase'; // Firestore 설정 경로를 맞게 설정하세요.
 import { onSnapshot, doc } from 'firebase/firestore';
