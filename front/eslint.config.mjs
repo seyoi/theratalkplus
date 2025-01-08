@@ -20,7 +20,11 @@ const eslintConfig = [
       "react/prop-types": "off",  // prop types 사용 강제 규칙 끄기
       "react/no-array-index-key": "off",  // 배열 인덱스를 key로 사용하는 규칙 끄기
       "react/jsx-no-target-blank": "off",  // target="_blank" 사용에 대한 경고 끄기
-      "react/no-unescaped-entities": "off",  // 특수 문자가 JSX에서 이스케이프되지 않은 경고 끄기
+      "react/no-unescaped-entities": "off", 
+       "@typescript-eslint/no-explicit-any": "off",  // `any` 타입 경고 끄기
+      "@typescript-eslint/no-unused-vars": "off",  // 사용되지 않는 변수 경고 끄기
+      "@typescript-eslint/no-empty-object-type": "off",  // 비어있는 객체 타입 경고 끄기
+    // 특수 문자가 JSX에서 이스케이프되지 않은 경고 끄기
     },
   },
 ];
