@@ -1,16 +1,16 @@
 import {StoryObj, Meta} from '@storybook/react';
 
-import { checkbox } from './checkbox';
+import Checkbox   from './checkbox';
 
 export default {
   title: 'checkbox',
-  component: checkbox,
+  component: Checkbox,
   args: {
     //TODO: Add args here
   },
-} as Meta<typeof checkbox>;
+} as Meta<typeof Checkbox>;
 
-type Story = StoryObj<typeof checkbox>;
+type Story = StoryObj<typeof Checkbox>;
 
 export const Default: Story = {
   args: {},
